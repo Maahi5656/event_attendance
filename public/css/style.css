@@ -1,0 +1,12 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.passwordDiv{
+    display: none;
+}
+
+.passwordDiv.active{
+    display: block;
+}
