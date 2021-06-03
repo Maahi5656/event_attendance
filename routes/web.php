@@ -13,26 +13,16 @@ use App\Http\Middleware\UserMiddleware;
 use App\Models\Employee;
 use Illuminate\Support\Facades\Auth;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/home', function(){
+Route::get('/home', function () {
     return view('layouts.dashboard_page');
 });
 
-Auth::routes();
+Auth::routes(['register' => false]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('admin');
 
@@ -51,10 +41,16 @@ Route::post('/profile-update', [App\Http\Controllers\ProfileController::class, '
 Route::get('/employee-registration', [App\Http\Controllers\RegistrationController::class, 'registerPage']);
 
 //QR Code
-Route::get('/new-qr', [App\Http\Controllers\QRController::class, 'QRPage']);
-Route::get('/qr-history', [App\Http\Controllers\QRController::class, 'details']);
+Route::get('/new-qr', [QRController::class, 'QRPage']);
+Route::post('/new-qr/store', [QRController::class, 'store'])->name('qrcode.store');
+Route::get('/qr-history', [QRController::class, 'details'])->name('qrcode.list');
 
 //User Dashboard
 Route::get('user/dashboard', [App\Http\Controllers\EmployeeController::class, 'userDashboard'])->middleware('user');
 Route::get('user-report-list', [App\Http\Controllers\EmployeeController::class, 'userRegisterList']);
 // Route::get('edit-user-profile/{id}', [App\Http\Controllers\EmployeeController::class, 'userRegisterList']);
+
+
+Route::get('qrcode', function () {
+    return QrCode::size(300)->generate('A basic example of QR code!');
+});
